@@ -9,7 +9,8 @@ for page in range(1, pages + 1):
     try:
         response = requests.get(url)
         data = response.json()
-        print(data)
+        for anime in data.get("data", []):
+            print(f"Page {page}: {anime.get('title')} (MAL ID: {anime.get('mal_id')})")
     except requests.RequestException as e:
         print(f"Error fetching data for page {page}: {e}")
     time.sleep(1)  # Add a delay of 1 second between requests to avoid overwhelming the server
