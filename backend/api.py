@@ -6,13 +6,17 @@ from crud import get_anime, create_anime, update_anime, delete_anime
 
 router = APIRouter()
 
+# Get the local database session.
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+        
 
+# API endpoints packed up in router to be included in the main FastAPI app. 
+# Each endpoint corresponds to a CRUD operation for the Anime model, except root endpoint which is just a welcome message.
 @router.get('/')
 def root_endpoint():
     return {"message": "Welcome to the SQLite FastAPI!"}

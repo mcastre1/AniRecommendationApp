@@ -3,9 +3,8 @@ from schemas import AnimeCreate
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-def root():
-    return {"message": "Welcome to the SQLite FastAPI!"}
-
+# CRUD operations for the Anime model. 
+# These functions interact with the database to perform create, read, update, and delete operations on anime records.
 def get_anime( mal_id: int, db: Session):
     anime = db.query(Anime).filter(Anime.mal_id == mal_id).first()
     if not anime:
