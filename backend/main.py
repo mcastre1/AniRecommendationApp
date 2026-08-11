@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from sentence_transformers import SentenceTransformer
+from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MultiLabelBinarizer, StandardScaler
 from api import router
 from contextlib import asynccontextmanager
 import sqlite3
 import pandas as pd
+import numpy as np
 
 anime_df = None  # Global variable to hold the anime DataFrame
 feature_matrix = None  # Global variable to hold the feature matrix
@@ -56,10 +58,21 @@ async def lifespan(app: FastAPI):
     model = SentenceTransformer('all-MiniLM-L6-v2')
     anime_df['synopsis_embedding'] = anime_df['synopsis'].apply(lambda x: model.encode(x if pd.notnull(x) else ""))
     
+    numeric_matrix = anime_df[["year_scaled", "episodes_scaled"]].values
+    age_matrix = age_df.values
+    synopsis_matrix = np.vstack(anime_df["synopsis_embedding"].values)
     
     # Populating the feature matrix with the relevant features for our KNN model. This includes the one-hot encoded genres and themes, the scaled numeric columns, and the synopsis embeddings.
-    feature_matrix = {
-    }
+    feature_matrix = np.hstack([
+        genre_df.values,
+        theme_df.values,
+        age_matrix,
+        numeric_matrix,
+        synopsis_matrix
+    ])
+    
+    knn_model = NearestNeighbors(n_neighbors=25, metric='cosine')  # Initialize the KNN model with cosine distance metric
+    knn_model.fit(feature_matrix)
     
     yield  # This is where the application runs. After this point, the application will start serving requests.
 
