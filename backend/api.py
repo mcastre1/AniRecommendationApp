@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from schemas import AnimeResponse, AnimeCreate
 from database import SessionLocal
 from crud import get_anime, create_anime, update_anime, delete_anime
+from main import anime_df, feature_matrix, knn_model
+import numpy as np
 
 router = APIRouter()
 
@@ -39,6 +41,15 @@ def delete_anime_endpoint(mal_id: int, db: Session = Depends(get_db)):
 
 @router.post('/recommendations', response_model=list[int])
 def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
-    print(f"Received IDs for recommendations: {ids}")  # Debugging statement to log the received IDs
-    print("test")
-    return ids
+    global anime_df, feature_matrix, knn_model
+    
+    liked_vectors = feature_matrix[anime_df['mal_id'].isin(ids)]
+    distances, indices = knn_model.kneighbors(liked_vectors, n_neighbors=25)
+    recommended_indices = np.unique(indices.flatten())
+    recommended_animes = anime_df.iloc[recommended_indices]
+    
+    recommended_animes = recommended_animes[~recommended_animes['mal_id'].isin(ids)]
+    
+    top10 = recommended_animes.head(10)
+    
+    return top10.to_dict(orient='records')
