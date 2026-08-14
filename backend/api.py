@@ -36,3 +36,9 @@ def update_anime_endpoint(mal_id: int, anime: AnimeCreate, db: Session = Depends
 @router.delete('/animes/{mal_id}')
 def delete_anime_endpoint(mal_id: int, db: Session = Depends(get_db)):
     return delete_anime(mal_id, db)
+
+@router.post('/recommendations', response_model=list[int])
+def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
+    print(f"Received IDs for recommendations: {ids}")  # Debugging statement to log the received IDs
+    print("test")
+    return ids
