@@ -24,13 +24,13 @@ async def lifespan(app: FastAPI):
     mlb = MultiLabelBinarizer() # Initialize the MultiLabelBinarizer for one-hot encoding of genres and themes
     
     anime_df['genre_names'] = anime_df['genres'].apply(lambda x: [genre['name'] for genre in eval(x)] if pd.notnull(x) else [])
-    anime_df['genres'] = anime_df['genres'].apply(lambda x: eval(x) if isinstance(x, str) else x)
+    anime_df['genres'] = anime_df['genres'].apply(lambda x: eval(x) if isinstance(x, str) else x) # Convert the 'genres' column from string representation of list to actual list
     genre_matrix = mlb.fit_transform(anime_df['genre_names']) # One-hot encode the 'genres' column
     genre_df = pd.DataFrame(genre_matrix, columns=mlb.classes_)
     anime_df = pd.concat([anime_df, genre_df], axis=1)
     
     anime_df['theme_names'] = anime_df['themes'].apply(lambda x: [theme['name'] for theme in eval(x)] if pd.notnull(x) else [])
-    anime_df['themes'] = anime_df['themes'].apply(lambda x: eval(x) if isinstance(x, str) else x)
+    anime_df['themes'] = anime_df['themes'].apply(lambda x: eval(x) if isinstance(x, str) else x) # Convert the 'themes' column from string representation of list to actual list
     theme_matrix = mlb.fit_transform(anime_df['theme_names']) # One-hot encode the 'themes' column
     theme_df = pd.DataFrame(theme_matrix, columns=mlb.classes_)
     anime_df = pd.concat([anime_df, theme_df], axis=1)
