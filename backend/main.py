@@ -7,10 +7,7 @@ from contextlib import asynccontextmanager
 import sqlite3
 import pandas as pd
 import numpy as np
-
-anime_df = None  # Global variable to hold the anime DataFrame
-feature_matrix = None  # Global variable to hold the feature matrix
-knn_model = None  # Global variable to hold the KNN model
+from states import anime_df, feature_matrix, knn_model
 
 # We add asynccontextmanager to the FastAPI app to handle the lifespan of the application. 
 # This allows us to perform setup and teardown operations when the application starts and stops, respectively. 

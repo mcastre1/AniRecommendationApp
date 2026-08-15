@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from schemas import AnimeResponse, AnimeCreate
 from database import SessionLocal
 from crud import get_anime, create_anime, update_anime, delete_anime
-from main import anime_df, feature_matrix, knn_model
+from states import anime_df, feature_matrix, knn_model
 import numpy as np
 
 router = APIRouter()
@@ -39,7 +39,7 @@ def update_anime_endpoint(mal_id: int, anime: AnimeCreate, db: Session = Depends
 def delete_anime_endpoint(mal_id: int, db: Session = Depends(get_db)):
     return delete_anime(mal_id, db)
 
-@router.post('/recommendations', response_model=list[int])
+@router.post('/recommendations', response_model=list[AnimeResponse])
 def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
     global anime_df, feature_matrix, knn_model
     
