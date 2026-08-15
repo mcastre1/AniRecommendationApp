@@ -45,13 +45,18 @@ def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
     feature_matrix = states.feature_matrix
     knn_model = states.knn_model
     
+    # We get the vectores from feature_matrix that correspond to the anime ids in the request.
     liked_vectors = feature_matrix[anime_df['mal_id'].isin(ids)]
-    distances, indices = knn_model.kneighbors(liked_vectors, n_neighbors=25)
-    recommended_indices = np.unique(indices.flatten())
-    recommended_animes = anime_df.iloc[recommended_indices]
     
+    # We find the indices of the nearest neighbors for each id that was passed in the request, in this case we are looking for 25 nearest neighbors per id.
+    distances, indices = knn_model.kneighbors(liked_vectors, n_neighbors=25)
+    # Since we are looking at multiple ids, we flatten the indices array and get the unique indices to avoid duplicates.
+    recommended_indices = np.unique(indices.flatten())
+    # We then get the anime objects from the anime_df with the recommended indices.
+    recommended_animes = anime_df.iloc[recommended_indices]
+    # And then we filter out the animes that were already liked by the user, so we don't recommend them again.
     recommended_animes = recommended_animes[~recommended_animes['mal_id'].isin(ids)]
     
+    # Finally, we return the top 10 recommendations.
     top10 = recommended_animes.head(10)
-    
     return top10.to_dict(orient='records')
