@@ -7,14 +7,14 @@ from contextlib import asynccontextmanager
 import sqlite3
 import pandas as pd
 import numpy as np
-from states import anime_df, feature_matrix, knn_model
+import states
 
 # We add asynccontextmanager to the FastAPI app to handle the lifespan of the application. 
 # This allows us to perform setup and teardown operations when the application starts and stops, respectively. 
 # In this case, we are connecting to the SQLite database and reading the anime data into a pandas DataFrame when the application starts.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global anime_df, feature_matrix, knn_model
+    import states
     
     # Create a connection to the SQLite database
     conn = sqlite3.connect("animes.db")
@@ -70,6 +70,10 @@ async def lifespan(app: FastAPI):
     
     knn_model = NearestNeighbors(n_neighbors=25, metric='cosine')  # Initialize the KNN model with cosine distance metric
     knn_model.fit(feature_matrix)
+    
+    states.anime_df = anime_df  # Store the anime DataFrame in the global state
+    states.feature_matrix = feature_matrix  # Store the feature matrix in the global state
+    states.knn_model = knn_model  # Store the KNN model in the global state
     
     yield  # This is where the application runs. After this point, the application will start serving requests.
 
