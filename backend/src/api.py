@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from schemas import AnimeResponse, AnimeCreate
-from database import SessionLocal
-from crud import get_anime, create_anime, update_anime, delete_anime
-import states
+from src.models import Anime
+from src.schemas import AnimeResponse, AnimeCreate
+from src.database import SessionLocal
+from src.crud import get_anime, create_anime, update_anime, delete_anime
+import src.states as states
 import numpy as np
 
 router = APIRouter()
@@ -39,6 +40,9 @@ def update_anime_endpoint(mal_id: int, anime: AnimeCreate, db: Session = Depends
 def delete_anime_endpoint(mal_id: int, db: Session = Depends(get_db)):
     return delete_anime(mal_id, db)
 
+
+# Extra endpoints for gui operations
+# Get top 10 recommended animes from user liked list
 @router.post('/recommendations', response_model=list[AnimeResponse])
 def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
     anime_df = states.anime_df
@@ -60,3 +64,12 @@ def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
     # Finally, we return the top 10 recommendations.
     top10 = recommended_animes.head(10)
     return top10.to_dict(orient='records')
+
+
+# Get anime rows with pagination
+@router.get('/animes', response_model=list[AnimeResponse])
+def get_animes(page: int = 1, limit: int = 50, db : Session = Depends(get_db)):
+    offset = (page - 1) * limit
+    animes = db.query(Anime).offset(offset).limit(limit).all()
+    
+    return animes

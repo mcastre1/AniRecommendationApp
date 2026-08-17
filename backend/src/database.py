@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base
+from src.models import Base
 
 # Database setup
 engine = create_engine("sqlite:///animes.db", connect_args={"check_same_thread": False})

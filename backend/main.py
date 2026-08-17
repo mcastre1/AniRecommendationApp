@@ -2,19 +2,19 @@ from fastapi import FastAPI
 from sentence_transformers import SentenceTransformer
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MultiLabelBinarizer, StandardScaler
-from api import router
+from src.api import router
 from contextlib import asynccontextmanager
 import sqlite3
 import pandas as pd
 import numpy as np
-import states
+import src.states as states
 
 # We add asynccontextmanager to the FastAPI app to handle the lifespan of the application. 
 # This allows us to perform setup and teardown operations when the application starts and stops, respectively. 
 # In this case, we are connecting to the SQLite database and reading the anime data into a pandas DataFrame when the application starts.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    import states
+    import src.states as states
     
     # Create a connection to the SQLite database
     conn = sqlite3.connect("animes.db")

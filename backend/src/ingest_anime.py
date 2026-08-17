@@ -1,7 +1,7 @@
 import time
 import requests
-from backend.src.database import SessionLocal
-from backend.src.models import Anime
+from database import SessionLocal
+from models import Anime
 
 pages = 607
 url = "https://api.tenrai.org/v1/anime?page=1&limit=50"

@@ -1,5 +1,5 @@
-from models import Anime
-from schemas import AnimeCreate
+from src.models import Anime
+from src.schemas import AnimeCreate
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
