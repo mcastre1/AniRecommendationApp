@@ -20,7 +20,7 @@ def create_anime(anime: AnimeCreate, db: Session):
     db_anime = Anime(**anime.model_dump())
     
     # Add the new anime to the database
-    db.add(db_anime)            # Add the new anime instance to the database session
+    db.add(db_anime)            # Add the new anime instance to the database sessi  on
     db.commit()                 # Commit the transaction to save the new anime to the database
     db.refresh(db_anime)        # Refresh the instance to get the updated data from the database (e.g., auto-generated fields)
     return db_anime             # Return the newly created anime instance as the response
