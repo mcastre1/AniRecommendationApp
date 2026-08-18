@@ -1,10 +1,12 @@
 import sys
 from PyQt6.QtWidgets import QApplication
 from ui.MainWindow import MainWindow
+from core.api import fetch_data
 
 app = QApplication(sys.argv)
 
-window = MainWindow()
+initial_data = fetch_data()
+window = MainWindow(initial_data=initial_data)
 window.show()
 
 sys.exit(app.exec())
