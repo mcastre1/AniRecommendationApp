@@ -6,6 +6,7 @@ from src.database import SessionLocal
 from src.crud import get_anime, create_anime, update_anime, delete_anime
 import src.states as states
 import numpy as np
+import json
 
 router = APIRouter()
 
@@ -63,6 +64,7 @@ def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
     
     # Finally, we return the top 10 recommendations.
     top10 = recommended_animes.head(10)
+    
     return top10.to_dict(orient='records')
 
 

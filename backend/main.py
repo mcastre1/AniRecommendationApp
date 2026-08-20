@@ -8,6 +8,18 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import src.states as states
+import json
+
+# Helper function to normalize pd column string into a dictionary with the help of json.loads
+def fix_images(x):
+    if isinstance(x, dict):
+        return x
+    elif isinstance(x, str):
+        try:
+            return json.loads(x)
+        except:
+            return None
+    return None
 
 # We add asynccontextmanager to the FastAPI app to handle the lifespan of the application. 
 # This allows us to perform setup and teardown operations when the application starts and stops, respectively. 
@@ -22,6 +34,8 @@ async def lifespan(app: FastAPI):
     conn.close()
     
     mlb = MultiLabelBinarizer() # Initialize the MultiLabelBinarizer for one-hot encoding of genres and themes
+    
+    anime_df['images'] = anime_df['images'].apply(fix_images)
     
     anime_df['genre_names'] = anime_df['genres'].apply(lambda x: [genre['name'] for genre in eval(x)] if pd.notnull(x) else [])
     anime_df['genres'] = anime_df['genres'].apply(lambda x: eval(x) if isinstance(x, str) else x) # Convert the 'genres' column from string representation of list to actual list

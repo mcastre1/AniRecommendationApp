@@ -1,11 +1,22 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
+# Pydantic models for image objects
+class ImageFormat(BaseModel):
+    image_url: Optional[str] = None
+    small_image_url: Optional[str] = None
+    large_image_url: Optional[str] = None
+
+class AnimeImages(BaseModel):
+    jpg: Optional[ImageFormat] = None
+    webp: Optional[ImageFormat] = None
+##################################
+
 # Pydantic models
 class AnimeCreate(BaseModel):
     mal_id: int
     title: str
-    images: Optional[List[dict]] = None
+    images: Optional[AnimeImages] = None
     genres: Optional[List[dict]] = None
     episodes: Optional[int] = None
     rating: Optional[str] = None
@@ -18,7 +29,7 @@ class AnimeCreate(BaseModel):
 class AnimeResponse(BaseModel):
     mal_id: int
     title: str
-    images: Optional[List[dict]] = None
+    images: Optional[AnimeImages] = None
     genres: Optional[List[dict]] = None
     episodes: Optional[int] = None
     rating: Optional[str] = None
