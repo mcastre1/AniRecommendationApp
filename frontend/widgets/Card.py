@@ -45,3 +45,7 @@ class Card(QWidget):
         # Setting minimum and max width
         self.setMinimumWidth(200)
         self.setMaximumWidth(250)
+        
+        #Setting minimum and max height
+        self.setMinimumHeight(350)
+        self.setMaximumHeight(400)

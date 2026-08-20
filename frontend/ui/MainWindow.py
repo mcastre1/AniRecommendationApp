@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScrollArea
 from widgets.Card import Card
 
 class MainWindow(QMainWindow):
@@ -8,21 +8,25 @@ class MainWindow(QMainWindow):
         
         # QMainWindow requires a centralWidget
         container = QWidget()
-        
-        # Layout for container
-        layout = QVBoxLayout(container)
-        
-        # We create the cards
-        self.card = Card('1', 'title test', 'img test')
-        
-        # Add cards to the layout
-        layout.addWidget(self.card)
-        
-        # Set the layout on container
-        container.setLayout(layout)
-        
-        # Set container as centralwidget
         self.setCentralWidget(container)
         
+        # main layout for main window
+        main_layout = QVBoxLayout(container)
+        
+        # Scroll Area
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        main_layout.addWidget(scroll)
+        
+        # Content widget inside scroll area
+        content = QWidget()
+        grid = QGridLayout()
+        content.setLayout(grid)
+        
+        scroll.setWidget(content)
+        
+        # Create and add cards to the grid        
+        for i, anime in enumerate(initial_data):
+            grid.addWidget(Card(anime['mal_id'], anime['title'], ''), i // 5, i % 5)
         
         
