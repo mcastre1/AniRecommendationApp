@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class AnimeCreate(BaseModel):
     mal_id: int
     title: str
+    images: Optional[List[dict]] = None
     genres: Optional[List[dict]] = None
     episodes: Optional[int] = None
     rating: Optional[str] = None
@@ -17,6 +18,7 @@ class AnimeCreate(BaseModel):
 class AnimeResponse(BaseModel):
     mal_id: int
     title: str
+    images: Optional[List[dict]] = None
     genres: Optional[List[dict]] = None
     episodes: Optional[int] = None
     rating: Optional[str] = None
