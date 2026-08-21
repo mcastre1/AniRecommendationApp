@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QThread
 import requests
+from widgets.ImageWorker import ImageWorker
 
 class Card(QWidget):
     def __init__(self, id:str, title: str, images: str):
@@ -15,10 +16,25 @@ class Card(QWidget):
         # Layout
         layout = QVBoxLayout()
         layout.setContentsMargins(12,12,12,12) # Margins from all sides
-        layout.setSpacing(5)
 
         # Image Label
         self.image_label = QLabel()
+        self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Start worker thread
+        self.thread = QThread()
+        self.worker = ImageWorker(self.images['jpg']['image_url'])
+        self.worker.moveToThread(self.thread)
+
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.set_image)
+        self.worker.error.connect(self.load_failed)
+
+        # Cleanup thread when done
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+
+        self.thread.start()
         
         # Title Label
         self.title_label = QLabel(self.title)
@@ -60,8 +76,8 @@ class Card(QWidget):
         self.setMinimumHeight(350)
         self.setMaximumHeight(400)
         
-        if self.images:
-            self.set_image_from_url(self.image_label, images['jpg']['image_url'])
+        # if self.images:
+        #     self.set_image_from_url(self.image_label, images['jpg']['image_url'])
         
         
     def set_image_from_url(self, label: QLabel, url: str):
@@ -77,3 +93,14 @@ class Card(QWidget):
             
         except Exception as e:
             print("Failed to load image:", e)
+            
+    def set_image(self, pixmap):
+        scaled = pixmap.scaled(
+            200, 300,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation
+        )
+        self.image_label.setPixmap(scaled)
+
+    def load_failed(self, msg):
+        self.image_label.setText("Failed to load")
