@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtCore import Qt
 
 class Card(QWidget):
     def __init__(self, id:str, title: str, img: str):
@@ -12,10 +13,13 @@ class Card(QWidget):
         # Layout
         layout = QVBoxLayout()
         layout.setContentsMargins(12,12,12,12) # Margins from all sides
-        layout.setSpacing(5) 
+        layout.setSpacing(5)
+
         
         # Title Label
         self.title_label = QLabel(self.title)
+        self.title_label.setWordWrap(True)
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.title_label.setStyleSheet("""
             font-size: 16px;
             font-weight: bold;
