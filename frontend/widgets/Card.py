@@ -1,20 +1,24 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
+import requests
 
 class Card(QWidget):
-    def __init__(self, id:str, title: str, img: str):
+    def __init__(self, id:str, title: str, images: str):
         super().__init__()
         
         # Class attributes    
         self.title = title
         self.id = id
-        self.img = img
+        self.images = images
         
         # Layout
         layout = QVBoxLayout()
         layout.setContentsMargins(12,12,12,12) # Margins from all sides
         layout.setSpacing(5)
 
+        # Image Label
+        self.image_label = QLabel()
         
         # Title Label
         self.title_label = QLabel(self.title)
@@ -28,7 +32,9 @@ class Card(QWidget):
         
         
         # Adding all widgets to the layout
+        layout.addWidget(self.image_label)
         layout.addWidget(self.title_label)
+        
         
         # We set the widget's layout
         self.setLayout(layout)
@@ -53,3 +59,21 @@ class Card(QWidget):
         #Setting minimum and max height
         self.setMinimumHeight(350)
         self.setMaximumHeight(400)
+        
+        if self.images:
+            self.set_image_from_url(self.image_label, images['jpg']['image_url'])
+        
+        
+    def set_image_from_url(self, label: QLabel, url: str):
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            
+            pixmap = QPixmap()
+            pixmap.loadFromData(response.content)
+            
+            label.setPixmap(pixmap)
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            
+        except Exception as e:
+            print("Failed to load image:", e)
