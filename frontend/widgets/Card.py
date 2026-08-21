@@ -7,7 +7,9 @@ from widgets.ImageWorker import ImageWorker
 class Card(QWidget):
     def __init__(self, id:str, title: str, images: str):
         super().__init__()
-        
+        #Allow this widget to use its stylesheet instead of the QGridLayout
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+
         # Class attributes    
         self.title = title
         self.id = id
@@ -15,11 +17,15 @@ class Card(QWidget):
         
         # Layout
         layout = QVBoxLayout()
-        layout.setContentsMargins(12,12,12,12) # Margins from all sides
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
+
 
         # Image Label
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        #self.image_label.setStyleSheet("""background: #ffffff;""")
+        
         # Start worker thread
         self.thread = QThread()
         self.worker = ImageWorker(self.images['jpg']['image_url'])
@@ -56,17 +62,20 @@ class Card(QWidget):
         self.setLayout(layout)
         
         # Setting this widget'ss style
+        self.setObjectName("animeCard")
+
         self.setStyleSheet("""
-            QWidget {
+            #animeCard {
                 background: #ffffff;
                 border: 1px solid #dcdcdc;
                 border-radius: 10px;
             }
-            QWidget:hover {
+            #animeCard:hover {
                 border: 1px solid #a0a0a0;
                 background: #f7f7f7;
             }
         """)
+
         
         # Setting minimum and max width
         self.setMinimumWidth(200)
