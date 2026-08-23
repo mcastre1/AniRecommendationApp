@@ -1,10 +1,18 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt, QThread
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
 import requests
 from widgets.ImageWorker import ImageWorker
 
 class Card(QWidget):
+    # Custom signal emitted when the widget is clicked
+    clicked = pyqtSignal()
+    
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.clicked.emit()
+        super().mousePressEvent(event)
+    
     def __init__(self, id:str, title: str, images: str):
         super().__init__()
         #Allow this widget to use its stylesheet instead of the QGridLayout
@@ -24,7 +32,6 @@ class Card(QWidget):
         # Image Label
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        #self.image_label.setStyleSheet("""background: #ffffff;""")
         
         # Start worker thread
         self.thread = QThread()

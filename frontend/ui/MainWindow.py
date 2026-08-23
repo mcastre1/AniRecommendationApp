@@ -1,5 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScrollArea
 from widgets.Card import Card
+from widgets.AnimeInfo import AnimeInfo
+from functools import partial
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_data):
@@ -27,6 +29,12 @@ class MainWindow(QMainWindow):
         
         # Create and add cards to the grid        
         for i, anime in enumerate(initial_data):
-            grid.addWidget(Card(anime['mal_id'], anime['title'], anime['images']), i // 5, i % 5)
+            widget = Card(anime['mal_id'], anime['title'], anime['images'])
+            widget.clicked.connect(partial(self.showAnimeInfo,'Hello World'))
+            grid.addWidget(widget, i // 5, i % 5)
+            
+    def showAnimeInfo(self, data):
+        self.w = AnimeInfo(data)
+        self.w.show()
         
         
