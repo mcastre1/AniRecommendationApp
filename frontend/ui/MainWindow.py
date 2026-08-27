@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         # Create and add cards to the grid        
         for i, anime in enumerate(initial_data):
             widget = Card(anime['mal_id'], anime['title'], anime['images'])
-            widget.clicked.connect(partial(self.showAnimeInfo,[widget.id, widget.title, widget.images]))
+            widget.clicked.connect(partial(self.showAnimeInfo, anime))
             grid.addWidget(widget, i // 5, i % 5)
             
     def showAnimeInfo(self, data):

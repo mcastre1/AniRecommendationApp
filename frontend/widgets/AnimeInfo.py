@@ -6,8 +6,6 @@ class AnimeInfo(QWidget):
     
     def __init__(self, data):
         super().__init__()
-        
-        print(data)
 
         self.topContainer = QWidget()
         self.topContainer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -22,7 +20,9 @@ class AnimeInfo(QWidget):
         self.centerContainer.setLayout(self.centerLayout)
         self.centerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
-        self.label = QLabel("test label")
+        self.title = QLabel(data['title'])
+        self.description = QLabel(data['synopsis'])
+        self.description.setWordWrap(True)
         
         self.backButton = QPushButton("Back to main")
         self.backButton.clicked.connect(self.backToMainSignal.emit)
@@ -47,7 +47,8 @@ class AnimeInfo(QWidget):
         self.backButton.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
         self.topLayout.addWidget(self.backButton)
-        self.centerLayout.addWidget(self.label)
+        self.centerLayout.addWidget(self.title)
+        self.centerLayout.addWidget(self.description)
         
         layout.addWidget(self.topContainer)
         layout.addWidget(self.centerContainer)
