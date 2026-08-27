@@ -1,14 +1,27 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QSizePolicy
+from PyQt6.QtCore import pyqtSignal, Qt
 
 class AnimeInfo(QWidget):
     backToMainSignal = pyqtSignal()
     
     def __init__(self, data):
         super().__init__()
+        
+        print(data)
 
+        self.topContainer = QWidget()
+        self.topContainer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.topLayout = QHBoxLayout()
+        self.topContainer.setLayout(self.topLayout)
+        self.topLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         
         layout = QVBoxLayout()
+        
+        self.centerContainer = QWidget()
+        self.centerLayout = QVBoxLayout()
+        self.centerContainer.setLayout(self.centerLayout)
+        self.centerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
         self.label = QLabel("test label")
         
         self.backButton = QPushButton("Back to main")
@@ -31,10 +44,15 @@ class AnimeInfo(QWidget):
                 background-color: #e8e8e8;
             }
         """)
+        self.backButton.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
+        self.topLayout.addWidget(self.backButton)
+        self.centerLayout.addWidget(self.label)
         
-        layout.addWidget(self.backButton)
-        layout.addWidget(self.label)
+        layout.addWidget(self.topContainer)
+        layout.addWidget(self.centerContainer)
+        
+        
         self.setLayout(layout)
         
         self.setStyleSheet("""
