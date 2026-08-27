@@ -7,6 +7,6 @@ app = QApplication(sys.argv)
 
 initial_data = fetch_data()
 window = MainWindow(initial_data=initial_data)
-window.show()
+window.showMaximized()
 
 sys.exit(app.exec())

@@ -8,6 +8,7 @@ class Card(QWidget):
     # Custom signal emitted when the widget is clicked
     clicked = pyqtSignal()
     
+    # We add the mousePress event and emit the pyqtSignal
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit()
@@ -27,7 +28,6 @@ class Card(QWidget):
         layout = QVBoxLayout()
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(8)
-
 
         # Image Label
         self.image_label = QLabel()
@@ -59,11 +59,9 @@ class Card(QWidget):
             color: #000;
         """)
         
-        
         # Adding all widgets to the layout
         layout.addWidget(self.image_label)
         layout.addWidget(self.title_label)
-        
         
         # We set the widget's layout
         self.setLayout(layout)
@@ -83,7 +81,6 @@ class Card(QWidget):
             }
         """)
 
-        
         # Setting minimum and max width
         self.setMinimumWidth(200)
         self.setMaximumWidth(250)
@@ -91,10 +88,6 @@ class Card(QWidget):
         #Setting minimum and max height
         self.setMinimumHeight(350)
         self.setMaximumHeight(400)
-        
-        # if self.images:
-        #     self.set_image_from_url(self.image_label, images['jpg']['image_url'])
-        
         
     def set_image_from_url(self, label: QLabel, url: str):
         try:

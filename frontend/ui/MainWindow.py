@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScrollArea
+from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScrollArea, QStackedWidget
 from widgets.Card import Card
 from widgets.AnimeInfo import AnimeInfo
 from functools import partial
@@ -8,12 +8,15 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Anime Recommendation')
         
+        self.stackedWidgets = QStackedWidget()
+        
         # QMainWindow requires a centralWidget
-        container = QWidget()
-        self.setCentralWidget(container)
+        self.qContainer = QWidget()
+        self.setCentralWidget(self.stackedWidgets)
+        self.stackedWidgets.addWidget(self.qContainer)
         
         # main layout for main window
-        main_layout = QVBoxLayout(container)
+        main_layout = QVBoxLayout(self.qContainer)
         
         # Scroll Area
         scroll = QScrollArea()
@@ -34,7 +37,16 @@ class MainWindow(QMainWindow):
             grid.addWidget(widget, i // 5, i % 5)
             
     def showAnimeInfo(self, data):
-        self.w = AnimeInfo(data)
-        self.w.show()
+        w = AnimeInfo(data)
+        w.backToMainSignal.connect(self.goBack)
+        self.stackedWidgets.addWidget(w)
+        self.stackedWidgets.setCurrentIndex(1)
+        
+    def goBack(self):
+        w = self.stackedWidgets.widget(1)
+        self.stackedWidgets.removeWidget(w)
+        w.deleteLater()
+        self.stackedWidgets.setCurrentIndex(0)
+        
         
         
