@@ -4,8 +4,12 @@ from widgets.AnimeInfo import AnimeInfo
 from functools import partial
 
 class MainWindow(QMainWindow):
+    
+    
     def __init__(self, initial_data):
         super().__init__()
+        self.likedAnimeIds = []
+        
         self.setWindowTitle('Anime Recommendation')
         
         self.stackedWidgets = QStackedWidget()
@@ -51,4 +55,5 @@ class MainWindow(QMainWindow):
         
     def likedAnime(self, data):
         print("Liked anime:", data['title']);
-        
+        self.likedAnimeIds.append(data['mal_id'])
+        print(self.likedAnimeIds)
