@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QSizePolicy
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtCore import pyqtSignal, Qt, QThread
+from widgets.ImageWorker import ImageWorker
 
 class AnimeInfo(QWidget):
     backToMainSignal = pyqtSignal()
@@ -20,6 +21,27 @@ class AnimeInfo(QWidget):
         self.centerLayout = QVBoxLayout()
         self.centerContainer.setLayout(self.centerLayout)
         self.centerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        
+        self.image_label = QLabel()
+        self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        # Start worker thread to load image
+        self.thread = QThread()
+        self.worker = ImageWorker(data['images']['jpg']['image_url'])
+        self.worker.moveToThread(self.thread)
+        
+        # Listen to worker thread signals, finished and error.
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.set_image)
+        self.worker.error.connect(self.load_failed)
+        
+        # Cleanup thread when done
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+
+        self.thread.start()
         
         self.title = QLabel(data['title'])
         self.likeButton = QPushButton("❤️")
@@ -62,6 +84,8 @@ class AnimeInfo(QWidget):
         self.backButton.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
         self.topLayout.addWidget(self.backButton)
+        
+        self.centerLayout.addWidget(self.image_label)
         self.centerLayout.addWidget(self.title)
         self.centerLayout.addWidget(self.likeButton)
         self.centerLayout.addWidget(self.description)
@@ -73,3 +97,14 @@ class AnimeInfo(QWidget):
         
         self.setStyleSheet("""
                            background-color : #123123""")  
+        
+    def set_image(self, pixmap):
+        scaled = pixmap.scaled(
+            200, 300,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation
+        )
+        self.image_label.setPixmap(scaled)
+    
+    def load_failed(self, msg):
+        self.image_label.setText("Failed to load")
