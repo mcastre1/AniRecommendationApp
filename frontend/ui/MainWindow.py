@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
     def showAnimeInfo(self, data):
         w = AnimeInfo(data)
         w.backToMainSignal.connect(self.goBack)
+        w.likedAnimeSignal.connect(self.likedAnime)
         self.stackedWidgets.addWidget(w)
         self.stackedWidgets.setCurrentIndex(1)
         
@@ -48,5 +49,6 @@ class MainWindow(QMainWindow):
         w.deleteLater()
         self.stackedWidgets.setCurrentIndex(0)
         
-        
+    def likedAnime(self, data):
+        print("Liked anime:", data['title']);
         

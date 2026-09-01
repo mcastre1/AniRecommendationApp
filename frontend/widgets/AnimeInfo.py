@@ -3,6 +3,7 @@ from PyQt6.QtCore import pyqtSignal, Qt
 
 class AnimeInfo(QWidget):
     backToMainSignal = pyqtSignal()
+    likedAnimeSignal = pyqtSignal(dict)
     
     def __init__(self, data):
         super().__init__()
@@ -21,6 +22,20 @@ class AnimeInfo(QWidget):
         self.centerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         self.title = QLabel(data['title'])
+        self.likeButton = QPushButton("❤️")
+        self.likeButton.setObjectName("likeButton")
+        self.likeButton.setStyleSheet("""
+            QPushButton#likeButton {
+                font-size: 26px;
+                background: transparent;
+                border: none;
+            }
+            QPushButton#likeButton:hover {
+                background-color: #ff4d6d;
+                border-radius: 100px;
+            }""")
+        self.likeButton.clicked.connect(lambda: self.likedAnimeSignal.emit(data))
+        
         self.description = QLabel(data['synopsis'])
         self.description.setWordWrap(True)
         
@@ -48,11 +63,11 @@ class AnimeInfo(QWidget):
 
         self.topLayout.addWidget(self.backButton)
         self.centerLayout.addWidget(self.title)
+        self.centerLayout.addWidget(self.likeButton)
         self.centerLayout.addWidget(self.description)
         
         layout.addWidget(self.topContainer)
         layout.addWidget(self.centerContainer)
-        
         
         self.setLayout(layout)
         
