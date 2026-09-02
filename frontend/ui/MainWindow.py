@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScr
 from widgets.Card import Card
 from widgets.AnimeInfo import AnimeInfo
 from functools import partial
+from PyQt6.QtGui import QAction
 
 class MainWindow(QMainWindow):
     
@@ -9,6 +10,8 @@ class MainWindow(QMainWindow):
     def __init__(self, initial_data):
         super().__init__()
         self.likedAnimeIds = []
+        
+        self.modifyMenuBar()
         
         self.setWindowTitle('Anime Recommendation')
         
@@ -57,3 +60,14 @@ class MainWindow(QMainWindow):
         print("Liked anime:", data['title']);
         self.likedAnimeIds.append(data['mal_id'])
         print(self.likedAnimeIds)
+        
+    def modifyMenuBar(self):
+        menuBar = self.menuBar()
+        menuBar.clear()
+        file_menu = menuBar.addMenu("File")
+        
+        liked_action = QAction("Liked Animes", self)
+        liked_action.triggered.connect(lambda: print("Liked Animes menu clicked"))
+        
+        file_menu.addAction(liked_action)
+        #likedAnimesMenu.triggered.connect(self.showLikedAnimes)
