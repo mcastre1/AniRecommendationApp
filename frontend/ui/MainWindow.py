@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScrollArea, QStackedWidget
+from widgets.LikedAnimes import LikedAnimes
 from widgets.Card import Card
 from widgets.AnimeInfo import AnimeInfo
 from functools import partial
@@ -50,6 +51,12 @@ class MainWindow(QMainWindow):
         self.stackedWidgets.addWidget(w)
         self.stackedWidgets.setCurrentIndex(1)
         
+    def showLikedAnimes(self):
+        w = LikedAnimes(self.likedAnimeIds)
+        w.backToMainSignal.connect(self.goBack)
+        self.stackedWidgets.addWidget(w)
+        self.stackedWidgets.setCurrentIndex(1)
+        
     def goBack(self):
         w = self.stackedWidgets.widget(1)
         self.stackedWidgets.removeWidget(w)
@@ -67,7 +74,7 @@ class MainWindow(QMainWindow):
         file_menu = menuBar.addMenu("File")
         
         liked_action = QAction("Liked Animes", self)
-        liked_action.triggered.connect(lambda: print("Liked Animes menu clicked"))
+        liked_action.triggered.connect(lambda: self.showLikedAnimes())
         
         file_menu.addAction(liked_action)
         #likedAnimesMenu.triggered.connect(self.showLikedAnimes)
