@@ -50,23 +50,25 @@ class MainWindow(QMainWindow):
         w.likedAnimeSignal.connect(self.likedAnime)
         self.stackedWidgets.addWidget(w)
         self.stackedWidgets.setCurrentIndex(1)
+        self.menuBar().hide()
         
     def showLikedAnimes(self):
         w = LikedAnimes(self.likedAnimeIds)
         w.backToMainSignal.connect(self.goBack)
         self.stackedWidgets.addWidget(w)
         self.stackedWidgets.setCurrentIndex(1)
+        self.menuBar().hide()
         
     def goBack(self):
         w = self.stackedWidgets.widget(1)
         self.stackedWidgets.removeWidget(w)
         w.deleteLater()
         self.stackedWidgets.setCurrentIndex(0)
+        self.menuBar().show()
         
     def likedAnime(self, data):
         print("Liked anime:", data['title']);
         self.likedAnimeIds.append(data['mal_id'])
-        print(self.likedAnimeIds)
         
     def modifyMenuBar(self):
         menuBar = self.menuBar()
