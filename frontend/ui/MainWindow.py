@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
     
     def __init__(self, initial_data):
         super().__init__()
-        self.likedAnimeIds = []
+        self.likedAnimes = []
         
         self.modifyMenuBar()
         
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.menuBar().hide()
         
     def showLikedAnimes(self):
-        w = LikedAnimes(self.likedAnimeIds)
+        w = LikedAnimes(self.likedAnimes)
         w.backToMainSignal.connect(self.goBack)
         self.stackedWidgets.addWidget(w)
         self.stackedWidgets.setCurrentIndex(1)
@@ -68,11 +68,11 @@ class MainWindow(QMainWindow):
         
     def likedAnime(self, data):
         print("Liked anime:", data['title']);
-        if data not in self.likedAnimeIds:
-            self.likedAnimeIds.append(data)
+        if data not in self.likedAnimes:
+            self.likedAnimes.append(data)
         else:
             print("Anime already liked:", data['title'])
-        print("Liked anime IDs:", self.likedAnimeIds)
+        print("Liked animes:", self.likedAnimes)
         
     def modifyMenuBar(self):
         menuBar = self.menuBar()
@@ -83,4 +83,3 @@ class MainWindow(QMainWindow):
         liked_action.triggered.connect(lambda: self.showLikedAnimes())
         
         file_menu.addAction(liked_action)
-        #likedAnimesMenu.triggered.connect(self.showLikedAnimes)

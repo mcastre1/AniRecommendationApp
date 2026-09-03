@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QGridLayout
 from PyQt6.QtCore import pyqtSignal, Qt
 
+from widgets.Card import Card
+
 class LikedAnimes(QWidget):
     backToMainSignal = pyqtSignal()
     
@@ -53,4 +55,10 @@ class LikedAnimes(QWidget):
         main_layout.addWidget(self.topContainer)
         main_layout.addWidget(scroll)
         
+        self.populateAnimeGrid(grid)
         self.setLayout(main_layout)
+        
+    def populateAnimeGrid(self, grid):
+        for i, anime in enumerate(self.liked_animes):
+            widget = Card(anime['mal_id'], anime['title'], anime['images'])
+            grid.addWidget(widget, i // 5, i % 5)
