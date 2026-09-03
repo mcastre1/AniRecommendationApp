@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
     
     def __init__(self, initial_data):
         super().__init__()
-        self.likedAnimeIds = set()
+        self.likedAnimeIds = []
         
         self.modifyMenuBar()
         
@@ -68,7 +68,10 @@ class MainWindow(QMainWindow):
         
     def likedAnime(self, data):
         print("Liked anime:", data['title']);
-        self.likedAnimeIds.add(data['mal_id'])
+        if data not in self.likedAnimeIds:
+            self.likedAnimeIds.append(data)
+        else:
+            print("Anime already liked:", data['title'])
         print("Liked anime IDs:", self.likedAnimeIds)
         
     def modifyMenuBar(self):
