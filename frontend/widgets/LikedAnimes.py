@@ -70,7 +70,7 @@ class LikedAnimes(QWidget):
         self.deleteAnimeSignal.emit(anime_id)
         self.clearGrid()  # Clear the grid layout
         self.populateAnimeGrid(self.grid)  # Repopulate the grid with the updated list
-        print(f"Deleted anime with ID: {anime_id}. Remaining liked animes: {len(self.liked_animes)}")
+        self.deleteAnimeSignal.emit(anime_id)  # Emit the signal to notify MainWindow about the deletion
         
     def clearGrid(self):
         while self.grid.count():

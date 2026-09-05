@@ -67,7 +67,6 @@ class Card(QWidget):
         layout.addWidget(self.title_label)
         
         if self.deleteable:
-            print("Deleteable is true, adding delete button")
             deleteButton = QPushButton("Delete")
             deleteButton.clicked.connect(self.deleteLikedAnime)
             deleteButton.setStyleSheet("""
