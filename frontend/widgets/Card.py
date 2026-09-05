@@ -66,16 +66,17 @@ class Card(QWidget):
         layout.addWidget(self.title_label)
         
         if self.deleteable:
-            self.deleteButton = QPushButton("Delete")
-            self.deleteButton.setStyleSheet("""
+            print("Deleteable is true, adding delete button")
+            deleteButton = QPushButton("Delete")
+            deleteButton.setStyleSheet("""
                 QPushButton {
                     background-color: #ff4d6d;
                     border: none;
                     padding: 8px 12px;
                     border-radius: 8px;
                     font-weight: bold;
-                    color: #000000;""")
-            layout.addWidget(self.deleteButton)
+                    color: #000000;}""")
+            layout.addWidget(deleteButton)
         
         # We set the widget's layout
         self.setLayout(layout)

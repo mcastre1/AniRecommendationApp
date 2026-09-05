@@ -10,7 +10,7 @@ class LikedAnimes(QWidget):
         super().__init__()
         
         self.liked_animes = liked_animes
-        print(self.liked_animes)
+        print(len(self.liked_animes))
         
         self.topContainer = QWidget()
         self.topContainer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
