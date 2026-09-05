@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QPushButton, QWidget, QVBoxLayout, QLabel
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 import requests
@@ -14,7 +14,7 @@ class Card(QWidget):
             self.clicked.emit()
         super().mousePressEvent(event)
     
-    def __init__(self, id:str, title: str, images: str):
+    def __init__(self, id:str, title: str, images: str, deleteable: bool = False):
         super().__init__()
         #Allow this widget to use its stylesheet instead of the QGridLayout
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
@@ -23,6 +23,7 @@ class Card(QWidget):
         self.title = title
         self.id = id
         self.images = images
+        self.deleteable = deleteable
         
         # Layout
         layout = QVBoxLayout()
@@ -59,9 +60,22 @@ class Card(QWidget):
             color: #000;
         """)
         
+        
         # Adding all widgets to the layout
         layout.addWidget(self.image_label)
         layout.addWidget(self.title_label)
+        
+        if self.deleteable:
+            self.deleteButton = QPushButton("Delete")
+            self.deleteButton.setStyleSheet("""
+                QPushButton {
+                    background-color: #ff4d6d;
+                    border: none;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    color: #000000;""")
+            layout.addWidget(self.deleteButton)
         
         # We set the widget's layout
         self.setLayout(layout)
@@ -70,12 +84,12 @@ class Card(QWidget):
         self.setObjectName("animeCard")
 
         self.setStyleSheet("""
-            #animeCard {
+            QWidget#animeCard {
                 background: #ffffff;
                 border: 1px solid #dcdcdc;
                 border-radius: 10px;
             }
-            #animeCard:hover {
+            QWidget#animeCard:hover {
                 border: 1px solid #a0a0a0;
                 background: #f7f7f7;
             }

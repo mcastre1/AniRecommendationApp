@@ -60,5 +60,5 @@ class LikedAnimes(QWidget):
         
     def populateAnimeGrid(self, grid):
         for i, anime in enumerate(self.liked_animes):
-            widget = Card(anime['mal_id'], anime['title'], anime['images'])
+            widget = Card(anime['mal_id'], anime['title'], anime['images'], deleteable=True)
             grid.addWidget(widget, i // 5, i % 5)
