@@ -58,6 +58,9 @@ class MainWindow(QMainWindow):
         self.stackedWidgets.setCurrentIndex(1)
         self.menuBar().hide()
         
+    def showRecommendations(self):
+        print("Recommendations clicked")
+        
     def deleteAnimeFromLiked(self, anime_id):
         self.likedAnimes = [anime for anime in self.likedAnimes if anime['mal_id'] != anime_id]
         
@@ -77,6 +80,7 @@ class MainWindow(QMainWindow):
         menuBar.clear()
         file_menu = menuBar.addMenu("File")
         recommend_action = QAction("Recommend Animes", self)
+        recommend_action.triggered.connect(lambda: self.showRecommendations())
         
         liked_action = QAction("Liked Animes", self)
         liked_action.triggered.connect(lambda: self.showLikedAnimes())
