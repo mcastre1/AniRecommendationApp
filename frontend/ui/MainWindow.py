@@ -6,8 +6,6 @@ from functools import partial
 from PyQt6.QtGui import QAction
 
 class MainWindow(QMainWindow):
-    
-    
     def __init__(self, initial_data):
         super().__init__()
         self.likedAnimes = []
@@ -78,8 +76,10 @@ class MainWindow(QMainWindow):
         menuBar = self.menuBar()
         menuBar.clear()
         file_menu = menuBar.addMenu("File")
+        recommend_action = QAction("Recommend Animes", self)
         
         liked_action = QAction("Liked Animes", self)
         liked_action.triggered.connect(lambda: self.showLikedAnimes())
         
+        self.menuBar().addAction(recommend_action)
         file_menu.addAction(liked_action)
