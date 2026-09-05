@@ -5,6 +5,7 @@ from widgets.Card import Card
 
 class LikedAnimes(QWidget):
     backToMainSignal = pyqtSignal()
+    deleteAnimeSignal = pyqtSignal(int)
     
     def __init__(self, liked_animes):
         super().__init__()
@@ -47,18 +48,33 @@ class LikedAnimes(QWidget):
         scroll.setWidgetResizable(True)
         
         content = QWidget()
-        grid = QGridLayout()
-        content.setLayout(grid)
+        self.grid = QGridLayout()
+        content.setLayout(self.grid)
         
         scroll.setWidget(content)
         
         main_layout.addWidget(self.topContainer)
         main_layout.addWidget(scroll)
         
-        self.populateAnimeGrid(grid)
+        self.populateAnimeGrid(self.grid)
         self.setLayout(main_layout)
         
     def populateAnimeGrid(self, grid):
         for i, anime in enumerate(self.liked_animes):
             widget = Card(anime['mal_id'], anime['title'], anime['images'], deleteable=True)
+            widget.deleteClicked.connect(self.deleteAnimeFromLiked)
             grid.addWidget(widget, i // 5, i % 5)
+            
+    def deleteAnimeFromLiked(self, anime_id):
+        self.liked_animes = [anime for anime in self.liked_animes if anime['mal_id'] != anime_id]
+        self.deleteAnimeSignal.emit(anime_id)
+        self.clearGrid()  # Clear the grid layout
+        self.populateAnimeGrid(self.grid)  # Repopulate the grid with the updated list
+        print(f"Deleted anime with ID: {anime_id}. Remaining liked animes: {len(self.liked_animes)}")
+        
+    def clearGrid(self):
+        while self.grid.count():
+            item = self.grid.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()

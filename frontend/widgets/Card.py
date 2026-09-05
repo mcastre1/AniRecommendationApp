@@ -7,6 +7,7 @@ from widgets.ImageWorker import ImageWorker
 class Card(QWidget):
     # Custom signal emitted when the widget is clicked
     clicked = pyqtSignal()
+    deleteClicked = pyqtSignal(int)
     
     # We add the mousePress event and emit the pyqtSignal
     def mousePressEvent(self, event):
@@ -68,6 +69,7 @@ class Card(QWidget):
         if self.deleteable:
             print("Deleteable is true, adding delete button")
             deleteButton = QPushButton("Delete")
+            deleteButton.clicked.connect(self.deleteLikedAnime)
             deleteButton.setStyleSheet("""
                 QPushButton {
                     background-color: #ff4d6d;
@@ -128,3 +130,7 @@ class Card(QWidget):
 
     def load_failed(self, msg):
         self.image_label.setText("Failed to load")
+        
+
+    def deleteLikedAnime(self):
+        self.deleteClicked.emit(self.id)
