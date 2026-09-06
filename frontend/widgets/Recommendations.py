@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QPushButton, QScrollArea, QSizePolicy, QVBoxLayout, QWidget
 from PyQt6.QtCore import pyqtSignal, Qt
+from core.api import get_recommendations
 
 class Recommendations(QWidget):
     backToMainSignal = pyqtSignal()
@@ -56,6 +57,12 @@ class Recommendations(QWidget):
         self.setLayout(main_layout)
         
     def getRecommendations(self):
+        if not self.liked_animes:
+            print("No liked animes to base recommendations on.")
+            return
+        
         print("Fetching recommendations...")
+        recommendations = get_recommendations([anime['mal_id'] for anime in self.liked_animes])
+        print("Recommendations fetched:", recommendations)
         
         
