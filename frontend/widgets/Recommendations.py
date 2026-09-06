@@ -1,0 +1,58 @@
+from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QPushButton, QScrollArea, QSizePolicy, QVBoxLayout, QWidget
+
+class Recommendations(QWidget):
+    def __init__(self, liked_animes, parent=None):
+        super().__init__(parent)
+        self.liked_animes = liked_animes
+        self.layout = QVBoxLayout()
+        
+        self.topContainer = QWidget()
+        self.topContainer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.topLayout = QHBoxLayout()
+        self.topContainer.setLayout(self.topLayout)
+        self.topLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        
+        self.backButton = QPushButton("Back to main")
+        self.backButton.clicked.connect(self.backToMainSignal.emit)
+        self.backButton.setStyleSheet("""
+            QPushButton {
+                background-color: #ffffff;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 8px;
+                font-weight: bold;
+                color: #000000;
+            }
+
+            QPushButton:hover {
+                background-color: #f5f5f5;
+            }
+
+            QPushButton:pressed {
+                background-color: #e8e8e8;
+            }
+        """)
+        self.backButton.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.topLayout.addWidget(self.backButton)
+        
+        main_layout = QVBoxLayout()
+            
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        
+        content = QWidget()
+        self.grid = QGridLayout()
+        content.setLayout(self.grid)
+        
+        scroll.setWidget(content)
+        
+        main_layout.addWidget(self.topContainer)
+        main_layout.addWidget(scroll)
+        
+        self.getRecommendations()
+        self.setLayout(main_layout)
+        
+    def getRecommendations(self):
+        print("Fetching recommendations...")
+        
+        
