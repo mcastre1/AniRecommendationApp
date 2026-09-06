@@ -1,6 +1,9 @@
 from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QPushButton, QScrollArea, QSizePolicy, QVBoxLayout, QWidget
+from PyQt6.QtCore import pyqtSignal, Qt
 
 class Recommendations(QWidget):
+    backToMainSignal = pyqtSignal()
+    
     def __init__(self, liked_animes, parent=None):
         super().__init__(parent)
         self.liked_animes = liked_animes

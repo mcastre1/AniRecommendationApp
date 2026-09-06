@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScr
 from widgets.LikedAnimes import LikedAnimes
 from widgets.Card import Card
 from widgets.AnimeInfo import AnimeInfo
+from widgets.Recommendations import Recommendations
 from functools import partial
 from PyQt6.QtGui import QAction
 
@@ -59,7 +60,11 @@ class MainWindow(QMainWindow):
         self.menuBar().hide()
         
     def showRecommendations(self):
-        print("Recommendations clicked")
+        w = Recommendations(self.likedAnimes)
+        w.backToMainSignal.connect(self.goBack)
+        self.stackedWidgets.addWidget(w)
+        self.stackedWidgets.setCurrentIndex(1)
+        self.menuBar().hide()
         
     def deleteAnimeFromLiked(self, anime_id):
         self.likedAnimes = [anime for anime in self.likedAnimes if anime['mal_id'] != anime_id]
