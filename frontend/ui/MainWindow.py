@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
         self.pages = {}
         self.pages[1] = initial_data
         self.current_page = 1
+        self.min_page, self.max_page = 1, 10
         
         self.modifyMenuBar()
         
@@ -36,13 +37,9 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(scroll)
         
         # Number pages buttons on the bottom
-        bottom_layout = QHBoxLayout()
-        for i in range(1, 10):
-            button = QPushButton(str(i))
-            button.clicked.connect(partial(self.changePage, i))
-            bottom_layout.addWidget(button)
-        
-        main_layout.addLayout(bottom_layout)
+        self.bottom_layout = QHBoxLayout()
+        self.updatePageSelector()
+        main_layout.addLayout(self.bottom_layout)
         
         # Content widget inside scroll area
         content = QWidget()
@@ -53,7 +50,36 @@ class MainWindow(QMainWindow):
         
         self.grid = grid
         self.populateAnimeGrid()
+        
+    def updatePageSelector(self):
+        self.removeWidgetsFromLayout(self.bottom_layout)
+        self.bottom_layout.addWidget(QPushButton("<", clicked=partial(self.movePages, '-')))
+        for i in range(self.min_page, self.max_page + 1):
+            button = QPushButton(str(i))
+            button.clicked.connect(partial(self.changePage, i))
+            self.bottom_layout.addWidget(button)
+        self.bottom_layout.addWidget(QPushButton(">", clicked=partial(self.movePages, '+')))
     
+    def movePages(self, direction):
+            print(self.min_page, self.max_page)
+            if direction == '-':
+                if self.min_page > 1:
+                    self.min_page -= 1
+                    self.max_page -= 1
+            elif direction == '+':
+                if self.max_page < 600:
+                    self.min_page += 1
+                    self.max_page += 1
+                    
+            self.updatePageSelector()
+    
+    def removeWidgetsFromLayout(self, layout):
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+
     def populateAnimeGrid(self):
          # Create and add cards to the grid        
         for i, anime in enumerate(self.viewable_animes):
