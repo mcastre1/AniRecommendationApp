@@ -8,3 +8,7 @@ def fetch_data():
 def get_recommendations(liked_animes):
     response = requests.post('http://127.0.0.1:8000/recommendations', json=liked_animes)
     return response.json()
+
+def get_anime_page(page_number):
+    response = requests.get(f'https://api.tenrai.org/v1/anime?page={page_number}&limit=50')
+    return response.json()

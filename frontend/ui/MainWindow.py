@@ -5,6 +5,7 @@ from widgets.AnimeInfo import AnimeInfo
 from widgets.Recommendations import Recommendations
 from functools import partial
 from PyQt6.QtGui import QAction
+from core.api import get_anime_page
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_data):
@@ -12,6 +13,7 @@ class MainWindow(QMainWindow):
         self.viewable_animes = initial_data
         self.likedAnimes = []
         self.pages = {}
+        self.pages[1] = initial_data
         self.current_page = 1
         
         self.modifyMenuBar()
@@ -49,17 +51,30 @@ class MainWindow(QMainWindow):
         
         scroll.setWidget(content)
         
-        self.populateAnimeGrid(grid)
+        self.grid = grid
+        self.populateAnimeGrid()
     
-    def populateAnimeGrid(self, grid):
+    def populateAnimeGrid(self):
          # Create and add cards to the grid        
         for i, anime in enumerate(self.viewable_animes):
             widget = Card(anime['mal_id'], anime['title'], anime['images'])
             widget.clicked.connect(partial(self.showAnimeInfo, anime))
-            grid.addWidget(widget, i // 5, i % 5)
+            self.grid.addWidget(widget, i // 5, i % 5)
 
     def changePage(self, page_number):
         print(f"Changing to page {page_number}")
+        self.current_page = page_number
+        self.viewable_animes = get_anime_page(page_number)['data']
+        self.pages[page_number] = self.viewable_animes
+        self.clearGrid()
+        self.populateAnimeGrid()
+        
+    def clearGrid(self):
+        while self.grid.count():
+            item = self.grid.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
             
     def showAnimeInfo(self, data):
         w = AnimeInfo(data)
