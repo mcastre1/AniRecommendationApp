@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QGridLayout, QWidget, QVBoxLayout, QScrollArea, QStackedWidget
+from PyQt6.QtWidgets import QMainWindow, QGridLayout, QPushButton, QWidget, QVBoxLayout, QScrollArea, QStackedWidget, QHBoxLayout
 from widgets.LikedAnimes import LikedAnimes
 from widgets.Card import Card
 from widgets.AnimeInfo import AnimeInfo
@@ -9,7 +9,10 @@ from PyQt6.QtGui import QAction
 class MainWindow(QMainWindow):
     def __init__(self, initial_data):
         super().__init__()
+        self.viewable_animes = initial_data
         self.likedAnimes = []
+        self.pages = {}
+        self.current_page = 1
         
         self.modifyMenuBar()
         
@@ -30,6 +33,15 @@ class MainWindow(QMainWindow):
         scroll.setWidgetResizable(True)
         main_layout.addWidget(scroll)
         
+        # Number pages buttons on the bottom
+        bottom_layout = QHBoxLayout()
+        for i in range(1, 10):
+            button = QPushButton(str(i))
+            button.clicked.connect(partial(self.changePage, i))
+            bottom_layout.addWidget(button)
+        
+        main_layout.addLayout(bottom_layout)
+        
         # Content widget inside scroll area
         content = QWidget()
         grid = QGridLayout()
@@ -37,11 +49,17 @@ class MainWindow(QMainWindow):
         
         scroll.setWidget(content)
         
-        # Create and add cards to the grid        
-        for i, anime in enumerate(initial_data):
+        self.populateAnimeGrid(grid)
+    
+    def populateAnimeGrid(self, grid):
+         # Create and add cards to the grid        
+        for i, anime in enumerate(self.viewable_animes):
             widget = Card(anime['mal_id'], anime['title'], anime['images'])
             widget.clicked.connect(partial(self.showAnimeInfo, anime))
             grid.addWidget(widget, i // 5, i % 5)
+
+    def changePage(self, page_number):
+        print(f"Changing to page {page_number}")
             
     def showAnimeInfo(self, data):
         w = AnimeInfo(data)
