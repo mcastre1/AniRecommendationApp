@@ -62,9 +62,12 @@ class MainWindow(QMainWindow):
             self.grid.addWidget(widget, i // 5, i % 5)
 
     def changePage(self, page_number):
-        print(f"Changing to page {page_number}")
+        if page_number not in self.pages:
+            self.viewable_animes = get_anime_page(page_number)['data']
+        else:
+            self.viewable_animes = self.pages[page_number]
+            
         self.current_page = page_number
-        self.viewable_animes = get_anime_page(page_number)['data']
         self.pages[page_number] = self.viewable_animes
         self.clearGrid()
         self.populateAnimeGrid()
