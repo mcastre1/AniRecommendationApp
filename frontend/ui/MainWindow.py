@@ -33,6 +33,16 @@ class MainWindow(QMainWindow):
         
         self.searchBox = QLineEdit()
         self.searchBox.setPlaceholderText("Search for an anime...")
+        self.searchBox.setStyleSheet("""
+            QLineEdit {
+                height: 40px;
+                border: 1px solid #000000;
+                border-radius: 8px;
+                padding: 0 8px;
+                font-size: 14px;
+                }
+                """)
+        
         main_layout.addWidget(self.searchBox)
         
         # Scroll Area
