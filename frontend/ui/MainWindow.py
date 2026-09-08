@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QGridLayout, QPushButton, QWidget, QVBoxLayout, QScrollArea, QStackedWidget, QHBoxLayout
+from PyQt6.QtWidgets import QLineEdit, QMainWindow, QGridLayout, QPushButton, QWidget, QVBoxLayout, QScrollArea, QStackedWidget, QHBoxLayout
 from widgets.LikedAnimes import LikedAnimes
 from widgets.Card import Card
 from widgets.AnimeInfo import AnimeInfo
@@ -30,6 +30,10 @@ class MainWindow(QMainWindow):
         
         # main layout for main window
         main_layout = QVBoxLayout(self.qContainer)
+        
+        self.searchBox = QLineEdit()
+        self.searchBox.setPlaceholderText("Search for an anime...")
+        main_layout.addWidget(self.searchBox)
         
         # Scroll Area
         scroll = QScrollArea()
