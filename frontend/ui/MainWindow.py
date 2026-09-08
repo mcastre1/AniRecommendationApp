@@ -42,6 +42,7 @@ class MainWindow(QMainWindow):
                 font-size: 14px;
                 }
                 """)
+        self.searchBox.textChanged.connect(self.searchAnime)
         
         main_layout.addWidget(self.searchBox)
         
@@ -64,6 +65,10 @@ class MainWindow(QMainWindow):
         
         self.grid = grid
         self.populateAnimeGrid()
+        
+    def searchAnime(self):
+        print("Searching for anime...")
+        print(self.searchBox.text())
         
     def updatePageSelector(self):
         self.removeWidgetsFromLayout(self.bottom_layout)
