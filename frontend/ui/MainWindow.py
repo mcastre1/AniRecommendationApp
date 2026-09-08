@@ -6,6 +6,7 @@ from widgets.Recommendations import Recommendations
 from functools import partial
 from PyQt6.QtGui import QAction
 from core.api import get_anime_page
+from PyQt6.QtCore import QTimer
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_data):
@@ -16,6 +17,7 @@ class MainWindow(QMainWindow):
         self.pages[1] = initial_data
         self.current_page = 1
         self.min_page, self.max_page = 1, 10
+        self.searchCooldown = False
         
         self.modifyMenuBar()
         
@@ -67,8 +69,16 @@ class MainWindow(QMainWindow):
         self.populateAnimeGrid()
         
     def searchAnime(self):
+        if self.searchCooldown:
+            print("Search is on cooldown. Please wait before searching again.")
+            return
         print("Searching for anime...")
         print(self.searchBox.text())
+        self.searchCooldown = True
+        QTimer.singleShot(2000, self.resetSearchCooldown)  # 2 second cooldown
+        
+    def resetSearchCooldown(self):
+        self.searchCooldown = False
         
     def updatePageSelector(self):
         self.removeWidgetsFromLayout(self.bottom_layout)
