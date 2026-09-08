@@ -69,9 +69,15 @@ class MainWindow(QMainWindow):
         self.populateAnimeGrid()
         
     def searchAnime(self):
+        if not self.searchBox.text():
+            print("Please enter a search query.")
+            print("Show page 1 of animes and set current page to 1")
+            return
+        
         if self.searchCooldown:
             print("Search is on cooldown. Please wait before searching again.")
             return
+        
         print("Searching for anime...")
         print(self.searchBox.text())
         self.searchCooldown = True
