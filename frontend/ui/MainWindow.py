@@ -5,7 +5,7 @@ from widgets.AnimeInfo import AnimeInfo
 from widgets.Recommendations import Recommendations
 from functools import partial
 from PyQt6.QtGui import QAction
-from core.api import get_anime_page
+from core.api import get_anime_page, search_animes
 from PyQt6.QtCore import QTimer
 
 class MainWindow(QMainWindow):
@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
     def searchAnime(self):
         if not self.searchBox.text():
             print("Please enter a search query.")
-            print("Show page 1 of animes and set current page to 1")
             return
         
         if self.searchCooldown:
@@ -80,6 +79,7 @@ class MainWindow(QMainWindow):
         
         print("Searching for anime...")
         print(self.searchBox.text())
+        print(search_animes(self.searchBox.text()))
         self.searchCooldown = True
         QTimer.singleShot(2000, self.resetSearchCooldown)  # 2 second cooldown
         
