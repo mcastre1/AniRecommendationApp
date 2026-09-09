@@ -25,6 +25,20 @@ def get_db():
 def root_endpoint():
     return {"message": "Welcome to the SQLite FastAPI!"}
 
+@router.get('/animes/search', response_model=list[AnimeResponse])
+def search_animes(query: str, db: Session = Depends(get_db)):
+    # Search for animes by title using a case-insensitive LIKE query
+    animes = db.query(Anime).filter(Anime.title.ilike(f"%{query}%")).all()
+    return animes
+
+# Get anime rows with pagination
+@router.get('/animes', response_model=list[AnimeResponse])
+def get_animes(page: int = 1, limit: int = 50, db : Session = Depends(get_db)):
+    offset = (page - 1) * limit
+    animes = db.query(Anime).offset(offset).limit(limit).all()
+    
+    return animes
+
 @router.post('/animes/', response_model=AnimeResponse)
 def create_anime_endpoint(anime: AnimeCreate, db: Session = Depends(get_db)):
     return create_anime(anime, db)
@@ -66,12 +80,3 @@ def get_recommendations_endpoint(ids: list[int], db: Session = Depends(get_db)):
     top10 = recommended_animes.head(10)
     
     return top10.to_dict(orient='records')
-
-
-# Get anime rows with pagination
-@router.get('/animes', response_model=list[AnimeResponse])
-def get_animes(page: int = 1, limit: int = 50, db : Session = Depends(get_db)):
-    offset = (page - 1) * limit
-    animes = db.query(Anime).offset(offset).limit(limit).all()
-    
-    return animes
